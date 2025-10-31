@@ -29,16 +29,18 @@ const login = async (req, res) => {
   if (!user) {
     return res.status(400).send("User doesn't exist of this email");
   }
-  if(user.password !== password){
-    return res.status(400).json({ message: "Incorrect password" });
+  if (await user.matchPassword(password)) {
+    res.status(200).send({
+      message: "User logged in success!!", User: {
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin
+      }
+    });
   }
-  res.status(200).send({
-    message: "User logged in success!!", User: {
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin
-    }
-  })
+  else {
+    res.status(400).send({ error: "Invalid Password!!" })
+  }
 }
 
 export { signup, login };
