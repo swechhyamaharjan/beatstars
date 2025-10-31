@@ -1,5 +1,5 @@
-import express from "express";
 import User from "../models/user.js"
+import createToken from "../utils/generateToken.js";
 
 const signup = async (req, res) => {
   const { name, email, password, isAdmin } = req.body;
@@ -30,6 +30,7 @@ const login = async (req, res) => {
     return res.status(400).send("User doesn't exist of this email");
   }
   if (await user.matchPassword(password)) {
+    createToken(res, user._id);
     res.status(200).send({
       message: "User logged in success!!", User: {
         name: user.name,
