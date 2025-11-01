@@ -5,6 +5,11 @@ import App from './App.jsx'
 import Login from './Login.jsx'
 import Signup from './Signup.jsx'
 import Collections from './Collections.jsx'
+import CheckEmail from './CheckEmail.jsx'
+import VerifyEmail from './VerifyEmail.jsx'
+import SetPassword from './SetPassword.jsx'
+import ForgotPassword from './ForgotPassword.jsx'
+import ResetPassword from './ResetPassword.jsx'
 
 function Placeholder({ title }) {
   return (
@@ -32,6 +37,11 @@ function Router() {
 
   if (hash.startsWith('#/login')) return <Login />
   if (hash.startsWith('#/signup')) return <Signup />
+  if (hash.startsWith('#/check-email')) return <CheckEmail />
+  if (hash.startsWith('#/verify-email')) return <VerifyEmail />
+  if (hash.startsWith('#/set-password')) return <SetPassword />
+  if (hash.startsWith('#/forgot-password')) return <ForgotPassword />
+  if (hash.startsWith('#/reset-password')) return <ResetPassword />
   if (hash.startsWith('#/collections')) return <Collections />
   if (hash.startsWith('#/tracks')) return <Placeholder title="Tracks" />
   if (hash.startsWith('#/soundkits')) return <Placeholder title="Sound Kits" />

@@ -38,12 +38,14 @@
 .bs-subnav__link { color:#bdbdbd; font-size:.95rem; display:inline-flex; align-items:center; gap:.4rem; }
 .bs-subnav__link:hover { color:#ffffff; }
 
-.bs-auth { color:#cfcfed; }
+.bs-auth { color:#cfcfed; background:transparent; border:none; cursor:pointer; font-size:inherit; padding:.5rem .9rem; border-radius:8px; }
+.bs-auth:hover { color:#fff; background:#1a1a1e; }
 .bs-divider { color:#5a5a66; }
 .bs-cta { background:#6a34e2; color:#fff; padding:.5rem .9rem; border-radius:10px; margin-left:.5rem; display:inline-flex; align-items:center; gap:.4rem; }
 .bs-cta:hover { background:#5a2fcb; }
 .bs-icon-btn { background:transparent; border:none; color:#ddd; font-size:1rem; padding:.4rem; }
 .bs-icon-btn:hover { color:#fff; }
+.bs-user-name { color:#e8e8e8; font-size:.95rem; font-weight:500; padding:.5rem .75rem; }
 
 @media (max-width: 900px) {
   .bs-subnav { display:none; }

@@ -1,6 +1,7 @@
 import './NavBar.css'
 import { useEffect, useRef, useState } from 'react'
 import { IconApps, IconSearch, IconMusic, IconRecord, IconWave, IconUser, IconRobot, IconChevronDown, IconCart } from './icons.jsx'
+import { auth } from './auth.js'
 
 function NavBar() {
   const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -8,6 +9,7 @@ function NavBar() {
   const filterRef = useRef(null)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [user, setUser] = useState(auth.getUser())
 
   const filterItems = [
     'All',
@@ -21,6 +23,15 @@ function NavBar() {
   ]
 
   useEffect(() => {
+    // Listen for auth changes
+    const handleAuthChange = () => {
+      setUser(auth.getUser())
+    }
+    window.addEventListener('authchange', handleAuthChange)
+    return () => window.removeEventListener('authchange', handleAuthChange)
+  }, [])
+
+  useEffect(() => {
     function onDocClick(e) {
       if (!filterRef.current) return
       if (!filterRef.current.contains(e.target)) {
@@ -30,6 +41,11 @@ function NavBar() {
     document.addEventListener('click', onDocClick)
     return () => document.removeEventListener('click', onDocClick)
   }, [])
+
+  const handleLogout = () => {
+    auth.clearUser()
+    window.location.hash = '/'
+  }
 
   useEffect(() => {
     function onScroll() {
@@ -111,12 +127,23 @@ function NavBar() {
           </div>
 
           <div className="bs-nav__right">
-            <a href="#/signup" className="bs-auth" onClick={(e) => { e.preventDefault(); window.location.hash = '/signup' }}>Sign up</a>
-            <span className="bs-divider" aria-hidden="true">|</span>
-            <a href="#/login" className="bs-auth" onClick={(e) => { e.preventDefault(); window.location.hash = '/login' }}>Sign in</a>
-            <a href="#" className="bs-cta">Start Selling <span className="bs-rocket">🚀</span></a>
-            <button className="bs-icon-btn" aria-label="Cart"><IconCart /></button>
-            <button className="bs-icon-btn" aria-label="More"><IconChevronDown /></button>
+            {user ? (
+              <>
+                <span className="bs-user-name">{user.name || user.email}</span>
+                <button className="bs-icon-btn" aria-label="Cart"><IconCart /></button>
+                <button className="bs-icon-btn" aria-label="More"><IconChevronDown /></button>
+                <button className="bs-auth" onClick={handleLogout}>Logout</button>
+              </>
+            ) : (
+              <>
+                <a href="#/signup" className="bs-auth" onClick={(e) => { e.preventDefault(); window.location.hash = '/signup' }}>Sign up</a>
+                <span className="bs-divider" aria-hidden="true">|</span>
+                <a href="#/login" className="bs-auth" onClick={(e) => { e.preventDefault(); window.location.hash = '/login' }}>Sign in</a>
+                <a href="#" className="bs-cta">Start Selling <span className="bs-rocket">🚀</span></a>
+                <button className="bs-icon-btn" aria-label="Cart"><IconCart /></button>
+                <button className="bs-icon-btn" aria-label="More"><IconChevronDown /></button>
+              </>
+            )}
           </div>
         </div>
 
@@ -141,9 +168,18 @@ function NavBar() {
             <a className="bs-mobile__link" href="#/musicians" onClick={(e) => { e.preventDefault(); window.location.hash = '/musicians'; setIsMobileOpen(false) }}>Musicians</a>
             <a className="bs-mobile__link" href="#/aimodels" onClick={(e) => { e.preventDefault(); window.location.hash = '/aimodels'; setIsMobileOpen(false) }}>AI Models</a>
             <div className="bs-mobile__auth">
-              <a href="#/signup" className="bs-auth" onClick={(e) => { e.preventDefault(); window.location.hash = '/signup'; setIsMobileOpen(false) }}>Sign up</a>
-              <a href="#/login" className="bs-auth" onClick={(e) => { e.preventDefault(); window.location.hash = '/login'; setIsMobileOpen(false) }}>Sign in</a>
-              <a href="#" className="bs-cta">Start Selling <span className="bs-rocket">🚀</span></a>
+              {user ? (
+                <>
+                  <span className="bs-user-name">{user.name || user.email}</span>
+                  <button className="bs-auth" onClick={() => { handleLogout(); setIsMobileOpen(false) }}>Logout</button>
+                </>
+              ) : (
+                <>
+                  <a href="#/signup" className="bs-auth" onClick={(e) => { e.preventDefault(); window.location.hash = '/signup'; setIsMobileOpen(false) }}>Sign up</a>
+                  <a href="#/login" className="bs-auth" onClick={(e) => { e.preventDefault(); window.location.hash = '/login'; setIsMobileOpen(false) }}>Sign in</a>
+                  <a href="#" className="bs-cta">Start Selling <span className="bs-rocket">🚀</span></a>
+                </>
+              )}
             </div>
           </nav>
         </div>
