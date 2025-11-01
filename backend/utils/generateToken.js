@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const createToken = (res, _id)=>{
-  const token = jwt.sign({_id}, 'mysecretjwtkey');
+  const token = jwt.sign({_id}, process.env.JWT_SECRET);
   res.cookie("jwt", token, {
     httpOnly: true,   
     secure: process.env.NODE_ENV === "production", 
